@@ -4,18 +4,22 @@
       <span>记录美好生活！</span>
     </div>
     <div class="edit-area">
-      <el-button type="primary" plain>
-        <el-icon style="vertical-align: middle">
-          <Plus/>
-        </el-icon>
-        写日志
-      </el-button>
-      <div class="form-area">
-        <FormKit :config="config" v-model:form-data="formData"></FormKit>
+      <div class="form-area" v-if="showEdit">
+        <FormKit :config="config" v-model:form-data="formData" ref="formRef"></FormKit>
         <el-row type="flex" justify="end">
-          <el-button size="small" type="primary" class="" @click="submit">发布</el-button>
+          <el-button type="info" size="small" plain @click="showEdit=false">取消</el-button>
+          <el-button size="small" type="primary" @click="submit">发布</el-button>
         </el-row>
       </div>
+      <div v-else>
+        <el-button type="primary" plain @click="showEdit=true ">
+          <el-icon style="vertical-align: middle">
+            <Plus/>
+          </el-icon>
+          写日志
+        </el-button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -27,23 +31,31 @@ const config = ref([
   {
     label: '标题名称',
     field: 'title',
-    type: 'input'
+    type: 'input',
+    required: true
   },
   {
     label: '内容',
     field: 'content',
     type: 'input',
+    required: true,
     props: {
       type: 'textarea',
-      autosize:{
-        minRows:5
+      autosize: {
+        minRows: 5
       }
     }
   }
 ])
 const formData = reactive({})
-const submit = ()=>{
-  console.log(formData,'formData')
+const showEdit = ref(false)
+const formRef = ref(null)
+const submit = () => {
+  console.log(formData, 'formData')
+  formRef.value.validate((valid, fields) => {
+    console.log(valid, fields)
+
+  })
 }
 </script>
 
@@ -62,7 +74,8 @@ const submit = ()=>{
 
   .edit-area {
     margin: 0 50px;
-    .form-area{
+
+    .form-area {
       width: 30%;
       margin-top: 20px;
     }

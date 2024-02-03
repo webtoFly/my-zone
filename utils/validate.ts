@@ -5,6 +5,6 @@ export const isExternal = (path: string) => {
 }
 
 // 字符串首字母转大写
-export const firstWordToUpper = (words) => {
-    if (typeof words === 'string' && words.length) return words.replace(words[0], words[0].toUpperCase())
+export const firstWordToUpper = (words: string): string => {
+    return words.replace(words[0], words[0].toUpperCase())
 }

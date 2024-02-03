@@ -1,9 +1,11 @@
 export interface formKitItemType {
     label: string,
     field: string,
-    type: string,
-    props?: {
-        clearable?: boolean,
-        placeholder?: string
-    }
+    span?: number,
+    required?: boolean,
+    visible?: any,
+    labelWidth?: string | number,
+    rules?: object[],
+    type?: string,
+    props?: object
 }

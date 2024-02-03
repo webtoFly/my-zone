@@ -1,7 +1,8 @@
 const modules = import.meta.glob(["./**/*.vue"])
-const customComponents = {}
+const customComponents: { [key: string]: any } = {}
 for (const key in modules) {
-    const componentName = key.match(/[a-zA-z]+/)[0]
+    const res = key.match(/[a-zA-z]+/) || []
+    const componentName = res[0] || ''
     customComponents[componentName] = modules[key]
 }
 export default customComponents

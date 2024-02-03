@@ -13,8 +13,8 @@
         v-bind="props.row" :style="{ 'row-gap': `${props.rowGap}px` }"
     >
       <el-col
-          v-for="(conf) in config.filter(ele => confController(ele))"
-          :key="conf.key"
+          v-for="(conf,index) in config.filter(ele => confController(ele))"
+          :key="conf.field"
           v-bind="props.responseSize"
           :span="conf.span || COL_SPAN">
         <el-form-item
@@ -25,13 +25,13 @@
             :rules="conf.rules">
           <component
               v-if="conf.type"
-              :ref="`formKit-component-${conf.key}`"
+              :ref="`formKit-component-${conf.field}`"
               :is="verificationLoad(conf.type)"
               v-model:modelValue="modelForm[conf.field]"
               :key="conf.field"
               :placeholder="`请填写${conf.label}`"
               v-bind="verificationProps(conf)"
-              @change="mutation($event, conf, $refs[`formKit-component-${conf.key}`], index)"
+              @change="mutation($event, conf, $refs[`formKit-component-${conf.field}`], index)"
 
           />
           <slot v-else :name="conf.field" :value="modelForm[conf.field]"/>
@@ -50,27 +50,32 @@ import type {formKitItemType} from "@/components/FormKit/type";
 import {firstWordToUpper} from "@/utils/validate";
 import {isArray, isBoolean, isObject} from "lodash-es";
 import customComponents from "@/components/FormKit/modules";
-const components = {}
+
+const components: { [key: string]: any } = {}
 //加载module文件夹下的文件
 for (const key in customComponents) {
   components[key] = defineAsyncComponent(customComponents[key])
 }
 
 type propsType = {
-  formData: object,
+  formData: { [key: string]: any; },
   config: formKitItemType[],
-  row?: object, // 表单row项设置
+  row?: { gutter?: number, type?: string }, // 表单row项设置
   rowGap?: number | string, // 表单项纵向间距
   columns?: number | string, // 每行显示多少列
   responseSize?: object// 表单响应式布局尺寸
 }
 const props = withDefaults(defineProps<propsType>(), {
-  row: {gutter: 30, type: 'flex'},
+  row: () => {
+    return ({gutter: 30, type: 'flex'})
+  },
   rowGap: 0,
   columns: 1,
   responseSize: () => {
+    return ({})
   },
   formData: () => {
+    return ({})
   },
   config: () => []
 })
@@ -80,7 +85,7 @@ const _FORM_ATTRS = computed(() => {
   if (props.columns !== 1) attrs.inline = true
   return attrs
 })
-const COL_SPAN = computed(() => 24 / props.columns * 1)
+const COL_SPAN = computed(() => 24 / Number(props.columns))
 
 const FormKitRef = ref(null)
 const verificationProps = (rows = {}) => {
@@ -96,7 +101,7 @@ const modelForm = computed({
     emit('update:formData', newValue)
   }
 })
-const confController = (conf) => {
+const confController = (conf: formKitItemType) => {
   if (conf.visible === undefined) {
     return conf
   } else {
@@ -105,7 +110,7 @@ const confController = (conf) => {
       if (isObject(conf.visible) && checkConfigIsVisible(conf.visible)) return conf
       if (isArray(conf.visible)) {
         const _visible = conf.visible
-        const isCheck = _visible.some(it => {
+        const isCheck = _visible.some((it: any) => {
           return checkConfigIsVisible(it)
         })
         if (isCheck) return conf
@@ -118,7 +123,8 @@ const confController = (conf) => {
     }
   }
 }
-const checkConfigIsVisible = ({value, key}) => {
+const checkConfigIsVisible = (config: { value: any, key: string }): boolean => {
+  const {value, key} = config
   if (key && value === undefined) {
     if (modelForm.value[key]) return true;
   } else if (value === undefined && key === undefined) {
@@ -135,18 +141,18 @@ const fixedPointClearValidate = (config = {}) => {
       Object.hasOwnProperty.call(config, "key" && "rules") &&
       FormKitRef.value
   ) {
-    FormKitRef.value.clearValidate([config.key]);
+    FormKitRef.value!.clearValidate([config.field]);
   }
 }
-const verificationLoad = (type) => {
-  const alias = {'address': 'el-cascader'}
+const verificationLoad = (type: string) => {
+  const alias: { [key: string]: string } = {'address': 'el-cascader'}
   if (components.hasOwnProperty(firstWordToUpper(type)) || components.hasOwnProperty(type)) return components[firstWordToUpper(type)]
   if (alias[type]) return alias[type]
   return `el-${type}`
 }
-const validate = (callback) => {
+const validate = (callback: any) => {
   return new Promise((resolve, reject) => {
-    FormKitRef.value.validate((valid, fields) => {
+    FormKitRef.value!.validate((valid: any, fields: any) => {
       if (callback) {
         callback(valid, fields)
       } else {
@@ -160,7 +166,7 @@ const validate = (callback) => {
   })
 }
 
-const mutation = async (event, config, refs, index) => {
+const mutation = async (event: any, config: formKitItemType, ref, index: number) => {
   fixedPointClearValidate(config)
   emit('change', {event, config})
 }

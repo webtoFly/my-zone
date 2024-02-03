@@ -1,3 +1,22 @@
-body .el-button {
-  cursor: inherit;
+$inputColor:#fff;
+body {
+  .el-button {
+    cursor: inherit;
+  }
+
+  .el-textarea__inner, .el-input__wrapper {
+    background-color: transparent;
+    box-shadow: 0 0 0 1px #333 inset;
+    color: $inputColor;
+    &:focus {
+      box-shadow: 0 0 0 1px #fff inset;
+    }
+    &.is-focus {
+      box-shadow: 0 0 0 1px #fff inset;
+    }
+  }
+
+  .el-input__inner {
+    color: $inputColor;
+  }
 }
