@@ -26,6 +26,8 @@
 
 <script lang="ts" setup>
 import FormKit from "~/components/FormKit/index.vue";
+import Http from '@/request/index'
+
 
 const config = ref([
   {
@@ -57,6 +59,11 @@ const submit = () => {
 
   })
 }
+
+
+onMounted(() => {
+  Http.get('/list',)
+})
 </script>
 
 <style lang="scss" scoped>
