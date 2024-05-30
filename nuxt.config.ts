@@ -38,9 +38,10 @@ export default defineNuxtConfig({
     nitro: {
         devProxy: {
             '/webApi': {
-                target: "http://192.168.188.32:3000",
+                target: "http://10.200.233.38:3000",
                 changeOrigin: true,
-                prependPath: true
+                prependPath: true,
+
             }
         },
     }

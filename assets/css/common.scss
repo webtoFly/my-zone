@@ -2,7 +2,6 @@
   width: 80%;
   margin: 0 auto;
 }
-
 @mixin textGradient($direction,$color1, $color2) {
   background-image: linear-gradient($direction, $color1, $color2);
   color: transparent;

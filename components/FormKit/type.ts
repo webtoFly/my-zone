@@ -1,4 +1,4 @@
-export interface formKitItemType {
+export type formKitItemType  = {
     label: string,
     field: string,
     span?: number,

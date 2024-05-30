@@ -19,7 +19,13 @@
           写日志
         </el-button>
       </div>
-
+      <div v-for="item in listData" :key="item.id">
+        <el-descriptions :title="item.title">
+          <el-descriptions-item>
+              {{ item }}
+          </el-descriptions-item>
+        </el-descriptions>
+      </div>
     </div>
   </div>
 </template>
@@ -27,8 +33,6 @@
 <script lang="ts" setup>
 import FormKit from "~/components/FormKit/index.vue";
 import Http from '@/request/index'
-
-
 const config = ref([
   {
     label: '标题名称',
@@ -44,25 +48,25 @@ const config = ref([
     props: {
       type: 'textarea',
       autosize: {
-        minRows: 5
+        minRows: 6
       }
     }
   }
 ])
 const formData = reactive({})
+const listData = ref([])
 const showEdit = ref(false)
 const formRef = ref(null)
 const submit = () => {
-  console.log(formData, 'formData')
   formRef.value.validate((valid, fields) => {
-    console.log(valid, fields)
-
+    if(valid) Http.post('/addLog',formData)
   })
 }
-
-
+const getList =async () => {
+  listData.value = await Http.get('/list')
+}
 onMounted(() => {
-  Http.get('/list',)
+  getList()
 })
 </script>
 
@@ -81,9 +85,7 @@ onMounted(() => {
 
   .edit-area {
     margin: 0 50px;
-
     .form-area {
-      width: 30%;
       margin-top: 20px;
     }
   }

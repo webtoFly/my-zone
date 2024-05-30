@@ -23,7 +23,6 @@ class Http {
 
     fetch(url: string, options?: any) {
         const requestUrl = process.env.NODE_ENV === "development" ? this.baseURL + url : '' + url
-        console.log(requestUrl,88)
         return new Promise(async (resolve, reject) => {
             try {
                 const {data, error} = await useFetch(requestUrl, {...options})
