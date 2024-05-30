@@ -1,26 +1,27 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// eslint-disable-next-line no-undef
 export default defineNuxtConfig({
     app: {
         head: {
-            charset: "UTF-8",
-            viewport: "width=device-width, initial-scale=1.0",
-            title: "首页",
-            meta: [{name: "description", content: "首页"}],
+            charset: 'UTF-8',
+            viewport: 'width=device-width, initial-scale=1.0',
+            title: '首页',
+            meta: [{name: 'description',
+                content: '首页'}],
         },
         layoutTransition: {
-            name: "layout",
-            mode: "out-in"
+            name: 'layout',
+            mode: 'out-in'
         },
         pageTransition: {
-            name: "page",
-            mode: "out-in"
+            name: 'page',
+            mode: 'out-in'
         }
     },
     ssr: false,
     devtools: {enabled: true},
-    modules: ["@element-plus/nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt", "@vueuse/nuxt"],
+    modules: ['@element-plus/nuxt', '@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt'],
     postcss: {},
-    css: ["~/assets/css/base.scss", "~/assets/css/element.scss","~/assets/css/index.scss", "~/assets/css/animation.scss",],//全局css
+    css: ['~/assets/css/base.scss', '~/assets/css/element.scss', '~/assets/css/index.scss', '~/assets/css/animation.scss',], //全局css
     vite: {
         css: {
             preprocessorOptions: {
@@ -38,11 +39,11 @@ export default defineNuxtConfig({
     nitro: {
         devProxy: {
             '/webApi': {
-                target: "http://10.200.233.38:3000",
+                target: 'http://10.200.233.38:3000',
                 changeOrigin: true,
                 prependPath: true,
 
             }
         },
     }
-})
+});

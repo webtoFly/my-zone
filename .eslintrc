@@ -1,17 +1,34 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "commonjs": true,
+    "es6": true,
     "es2021": true
   },
+  "ignorePatterns": ["node_modules/*"],
   "overrides": [
   ],
   "parserOptions": {
-    "ecmaVersion": "latest",
+    "ecmaFeatures": {
+      "modules": true
+    },
     "sourceType": "module"
   },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "plugins": [
+    "vue"
+  ],
   "rules": {
+    "wrap-iife": [
+      2,
+      "inside"
+    ],
+    "no-else-return": 2,
+    "no-func-assign": 2,
+    "no-var": 0
   }
 }
 
