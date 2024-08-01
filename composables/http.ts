@@ -1,5 +1,5 @@
 type Methods = 'GET' | 'POST'
-const BASE_URL = ''
+const BASE_URL = '';
 
 class Http {
     constructor() {
@@ -9,6 +9,6 @@ class Http {
 
     }
 }
-const httpRequest = new Http()
-console.log(httpRequest,'httpRequest')
-export default httpRequest
+const httpRequest = new Http();
+console.log(httpRequest, 'httpRequest');
+export default httpRequest;

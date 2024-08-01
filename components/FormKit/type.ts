@@ -1,4 +1,4 @@
-export type formKitItemType  = {
+export type formKitItemType = {
     label: string,
     field: string,
     span?: number,

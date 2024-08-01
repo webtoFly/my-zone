@@ -10,24 +10,23 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed} from 'vue';
 
 const props = defineProps({
-  modelValue: {
-    default: '',
-    required: true
-  },
-  options: {type: Array, default: () => []}
-})
-const emit = defineEmits(['update:modelValue'])
+    modelValue: {
+        default: '',
+        required: true
+    },
+    options: {type: Array,
+        default: () => []}
+});
+const emit = defineEmits(['update:modelValue']);
 const _value = computed({
-  get: () => {
-    return props.modelValue + ''
-  },
-  set: (newValue) => {
-    emit('update:modelValue', newValue)
-  }
-})
+    get: () => `${props.modelValue}`,
+    set: newValue => {
+        emit('update:modelValue', newValue);
+    }
+});
 
 
 </script>

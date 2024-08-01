@@ -45,17 +45,17 @@
   </el-form>
 </template>
 <script setup lang="ts">
-import {computed, defineAsyncComponent, ref} from "vue";
-import type {formKitItemType} from "@/components/FormKit/type";
-import {firstWordToUpper} from "@/utils/validate";
-import {isArray, isBoolean, isObject} from "lodash-es";
-import customComponents from "@/components/FormKit/modules";
+import {computed, defineAsyncComponent, ref} from 'vue';
+import type {formKitItemType} from '@/components/FormKit/type';
+import {firstWordToUpper} from '@/utils/validate';
+import {isArray, isBoolean, isObject} from 'lodash-es';
+import customComponents from '@/components/FormKit/modules';
 
-const components: { [key: string]: any } = {}
+const components: { [key: string]: any } = {};
 //加载module文件夹下的文件
-for (const key in customComponents) {
-  components[key] = defineAsyncComponent(customComponents[key])
-}
+for(const key in customComponents)
+    components[key] = defineAsyncComponent(customComponents[key]);
+
 
 type propsType = {
   formData: { [key: string]: any; },
@@ -66,118 +66,104 @@ type propsType = {
   responseSize?: object// 表单响应式布局尺寸
 }
 const props = withDefaults(defineProps<propsType>(), {
-  row: () => {
-    return ({gutter: 30, type: 'flex'})
-  },
-  rowGap: 0,
-  columns: 1,
-  responseSize: () => {
-    return ({})
-  },
-  formData: () => {
-    return ({})
-  },
-  config: () => []
-})
-const UNIQUE_KEY = computed(() => Number(new Date()))
+    row: () => ({gutter: 30,
+        type: 'flex'}),
+    rowGap: 0,
+    columns: 1,
+    responseSize: () => ({}),
+    formData: () => ({}),
+    config: () => []
+});
+const UNIQUE_KEY = computed(() => Number(new Date()));
 const _FORM_ATTRS = computed(() => {
-  const attrs = {}
-  if (props.columns !== 1) attrs.inline = true
-  return attrs
-})
-const COL_SPAN = computed(() => 24 / Number(props.columns))
+    const attrs = {};
+    if(props.columns !== 1) attrs.inline = true;
+    return attrs;
+});
+const COL_SPAN = computed(() => 24 / Number(props.columns));
 
-const FormKitRef = ref(null)
+const FormKitRef = ref(null);
 const verificationProps = (rows = {}) => {
-  const {type, request, props = {}} = rows
-  return props
-}
-const emit = defineEmits(['update:formData', 'change'])
+    const {type, request, props = {}} = rows;
+    return props;
+};
+const emit = defineEmits(['update:formData', 'change']);
 const modelForm = computed({
-  get: () => {
-    return props.formData
-  },
-  set: (newValue) => {
-    emit('update:formData', newValue)
-  }
-})
-const confController = (conf: formKitItemType) => {
-  if (conf.visible === undefined) {
-    return conf
-  } else {
-    if (isObject(conf.visible) || isArray(conf.visible)) {
-      fixedPointClearValidate(conf)
-      if (isObject(conf.visible) && checkConfigIsVisible(conf.visible)) return conf
-      if (isArray(conf.visible)) {
-        const _visible = conf.visible
-        const isCheck = _visible.some((it: any) => {
-          return checkConfigIsVisible(it)
-        })
-        if (isCheck) return conf
-      }
-    } else if (isBoolean(conf.visible)) {
-      if (conf.visible) return conf
-    } else {
-      console.warn('visible field has been set, but it is not an [array, object, Boolean]!')
-      return conf
+    get: () => props.formData,
+    set: newValue => {
+        emit('update:formData', newValue);
     }
-  }
-}
-const checkConfigIsVisible = (config: { value: any, key: string }): boolean => {
-  const {value, key} = config
-  if (key && value === undefined) {
-    if (modelForm.value[key]) return true;
-  } else if (value === undefined && key === undefined) {
-    console.warn(
-        "Key and value field not detected, U can like this: { value, key } or { key }"
-    );
-  } else {
-    if (modelForm.value[key] === value) return true;
-  }
-  return false;
-}
-const fixedPointClearValidate = (config = {}) => {
-  if (
-      Object.hasOwnProperty.call(config, "key" && "rules") &&
-      FormKitRef.value
-  ) {
-    FormKitRef.value!.clearValidate([config.field]);
-  }
-}
-const verificationLoad = (type: string) => {
-  const alias: { [key: string]: string } = {'address': 'el-cascader'}
-  if (components.hasOwnProperty(firstWordToUpper(type)) || components.hasOwnProperty(type)) return components[firstWordToUpper(type)]
-  if (alias[type]) return alias[type]
-  return `el-${type}`
-}
-const validate = (callback: any) => {
-  return new Promise((resolve, reject) => {
-    FormKitRef.value!.validate((valid: any, fields: any) => {
-      if (callback) {
-        callback(valid, fields)
-      } else {
-        if (valid) {
-          console.log('submit!')
-        } else {
-          console.log('error submit!', fields)
+});
+const confController = (conf: formKitItemType) => {
+    if(conf.visible === undefined)
+        return conf;
+
+    if(isObject(conf.visible) || isArray(conf.visible)) {
+        fixedPointClearValidate(conf);
+        if(isObject(conf.visible) && checkConfigIsVisible(conf.visible)) return conf;
+        if(isArray(conf.visible)) {
+            const _visible = conf.visible;
+            const isCheck = _visible.some((it: any) => checkConfigIsVisible(it));
+            if(isCheck) return conf;
         }
-      }
-    })
-  })
-}
+    } else if(isBoolean(conf.visible)) {
+        if(conf.visible) return conf;
+    } else {
+        console.warn('visible field has been set, but it is not an [array, object, Boolean]!');
+        return conf;
+    }
+};
+const checkConfigIsVisible = (config: { value: any, key: string }): boolean => {
+    const {value, key} = config;
+    if(key && value === undefined) {
+        if(modelForm.value[key]) return true;
+    } else if(value === undefined && key === undefined)
+        console.warn(
+            'Key and value field not detected, U can like this: { value, key } or { key }'
+        );
+    else
+        if(modelForm.value[key] === value) return true;
 
-const mutation = async (event: any, config: formKitItemType, ref, index: number) => {
-  fixedPointClearValidate(config)
-  emit('change', {event, config})
-}
+    return false;
+};
+const fixedPointClearValidate = (config = {}) => {
+    if(
+        Object.hasOwnProperty.call(config, 'key' && 'rules') &&
+      FormKitRef.value
+    )
+    FormKitRef.value!.clearValidate([config.field]);
+};
+const verificationLoad = (type: string) => {
+    const alias: { [key: string]: string } = {address: 'el-cascader'};
+    if(Object.prototype.hasOwnProperty.call(components, firstWordToUpper(type)) || Object.prototype.hasOwnProperty.call(components, type)) return components[firstWordToUpper(type)];
+    if(alias[type]) return alias[type];
+    return `el-${type}`;
+};
+const validate = (callback: any) => new Promise((resolve, reject) => {
+    FormKitRef.value!.validate((valid: any, fields: any) => {
+        if(callback)
+            callback(valid, fields);
+        else
+            if(valid)
+                console.log('submit!');
+            else
+                console.log('error submit!', fields);
+    });
+});
 
-defineExpose({validate})
+const mutation = async(event: any, config: formKitItemType, ref, index: number) => {
+    fixedPointClearValidate(config);
+    emit('change', {event,
+        config});
+};
+
+defineExpose({validate});
 
 </script>
 <script lang="ts">
 export default {
-  name: 'FormKit',
-}
+    name: 'FormKit',
+};
 </script>
 
 <style scoped lang="scss">

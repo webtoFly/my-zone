@@ -34,16 +34,18 @@ export default defineNuxtConfig({
     },
     devServer: {
         host: '0.0.0.0',
-        port: 2024
+        port: 2024,
     },
     nitro: {
         devProxy: {
             '/webApi': {
-                target: 'http://10.200.233.38:3000',
+                target: 'http://192.168.0.100:2008',
+                // target: 'http://10.200.233.38:3000',
                 changeOrigin: true,
                 prependPath: true,
 
             }
         },
+
     }
 });

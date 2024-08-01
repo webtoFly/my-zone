@@ -36,12 +36,12 @@
 </template>
 
 <script setup>
-const route = useRoute()
-const activeIndex = ref(route.fullPath)
-const handleSelect = (val) => {
-  console.log(val)
-  activeIndex.value = val
-}
+const route = useRoute();
+const activeIndex = ref(route.fullPath);
+const handleSelect = val => {
+    console.log(val);
+    activeIndex.value = val;
+};
 </script>
 
 <style lang="scss" scoped>

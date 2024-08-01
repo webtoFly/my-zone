@@ -8,24 +8,22 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
-import districts from "@/utils/districts";
+import {computed} from 'vue';
+import districts from '@/utils/districts';
 
 const props = defineProps({
-  modelValue: {
-    default: '',
-    required: true
-  },
-})
-const emit = defineEmits(['update:modelValue'])
+    modelValue: {
+        default: '',
+        required: true
+    },
+});
+const emit = defineEmits(['update:modelValue']);
 const _value = computed({
-  get: () => {
-    return props.modelValue
-  },
-  set: (newValue) => {
-    emit('update:modelValue', newValue)
-  }
-})
+    get: () => props.modelValue,
+    set: newValue => {
+        emit('update:modelValue', newValue);
+    }
+});
 
 </script>
 
